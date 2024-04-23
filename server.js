@@ -4,20 +4,22 @@ const app = express()
 const port = 3000
 app.use(morgan('combined'))
 
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 const router1 = require('./apiRouter')
 
-// middleware
-const check = (req, res, next) => {
-  const dangnhap = true
-  if(dangnhap) {
-    next()
-  }else {
-    res.json('Bạn chưa đăng nhập')
-  }
-}
+app.post('/register', (req, res, next) => {
+  const username = req.body.username
+  const password = req.body.password
 
-app.get('/', check, (req, res, next) => {
-  res.json('Dữ liệu')
+  console.log(username, password);
+  res.json({username, password})
+})
+
+app.get('/', (req, res, next) => {
+  res.json('HomePage')
 })
 
 app.use('/api/v1/', router1)
